@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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',
-          'HTTP-Referer': 'http://localhost:5000', // Replace with your site URL
+          'Authorization': 'Bearer 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', // Replace with your actual API key
+          'HTTP-Referer': 'https://justin-ii.github.io/AI/', // Updated to your GitHub Pages URL
           'X-Title': 'AI Tutor Chatbot', // Replace with your site name
           'Content-Type': 'application/json'
         },
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       // Extract bot reply from the API response
-      const botReply = data.choices[0].message.content;
+      const botReply = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't process that.";
 
       // Add bot response to the chat
       addMessage('bot', botReply);
