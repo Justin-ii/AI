@@ -10,14 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function addMessage(sender, text) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-
-    // Add message content
     messageDiv.textContent = text;
-
-    // Append the message to the chat box
     chatBox.appendChild(messageDiv);
-
-    // Auto-scroll to the latest message with smooth behavior
     scrollToBottom();
   }
 
@@ -25,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function scrollToBottom() {
     chatBox.scrollTo({
       top: chatBox.scrollHeight,
-      behavior: 'smooth' // Ensures smooth scrolling
+      behavior: 'smooth'
     });
   }
 
@@ -44,13 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
     userInput.value = '';
 
     try {
-      // Call the OpenRouter API here
+      console.log("Sending request to OpenRouter API...");
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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', // Replace with your actual API key
-          'HTTP-Referer': 'https://justin-ii.github.io/AI/', // Updated to your GitHub Pages URL
-          'X-Title': 'AI Tutor Chatbot', // Replace with your site name
+          'Authorization': 'Bearer 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',
+          'HTTP-Referer': 'https://justin-ii.github.io/AI/',
+          'X-Title': 'HOPE-AI',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -70,23 +64,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
               ]
             },
-            ...conversationHistory // Include the entire conversation history
+            ...conversationHistory
           ]
         })
       });
 
+      console.log("API Response Status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
+      console.log("API Response Data:", data);
 
       // Extract bot reply from the API response
       const botReply = data.choices?.[0]?.message?.content?.[0]?.text || "I'm sorry, I couldn't process that.";
-
-      // Add bot response to the chat
       addMessage('bot', botReply);
 
       // Add bot response to the conversation history
       conversationHistory.push({ role: "assistant", content: [{ type: "text", text: botReply }] });
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching bot response:", error);
       addMessage('bot', 'Something went wrong!');
     }
   }
