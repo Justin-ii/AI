@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessage('user', userMessage);
 
     // Add user message to the conversation history
-    conversationHistory.push({ role: "user", content: userMessage });
+    conversationHistory.push({ role: "user", content: [{ type: "text", text: userMessage }] });
 
     // Clear input field
     userInput.value = '';
@@ -58,12 +58,17 @@ document.addEventListener("DOMContentLoaded", () => {
           messages: [
             {
               role: "system",
-              content: `
-                You are an AI tutor developed by HARINANDAN and powered by HOPE in Core.
-                Your purpose is to assist users in learning and solving problems.
-                Always provide clear, concise, and accurate explanations.
-                If you don't know the answer, say so instead of making things up.
-              `
+              content: [
+                {
+                  type: "text",
+                  text: `
+                    You are an AI tutor developed by HARINANDAN and powered by HOPE in Core.
+                    Your purpose is to assist users in learning and solving problems.
+                    Always provide clear, concise, and accurate explanations.
+                    If you don't know the answer, say so instead of making things up.
+                  `
+                }
+              ]
             },
             ...conversationHistory // Include the entire conversation history
           ]
@@ -73,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       // Extract bot reply from the API response
-      const botReply = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't process that.";
+      const botReply = data.choices?.[0]?.message?.content?.[0]?.text || "I'm sorry, I couldn't process that.";
 
       // Add bot response to the chat
       addMessage('bot', botReply);
 
       // Add bot response to the conversation history
-      conversationHistory.push({ role: "assistant", content: botReply });
+      conversationHistory.push({ role: "assistant", content: [{ type: "text", text: botReply }] });
     } catch (error) {
       console.error(error);
       addMessage('bot', 'Something went wrong!');
