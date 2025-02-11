@@ -32,7 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessage('user', userMessage);
 
     // Add user message to the conversation history
-    conversationHistory.push({ role: "user", content: [{ type: "text", text: userMessage }] });
+    conversationHistory.push({
+      role: "user",
+      content: [
+        { type: "text", text: userMessage }
+      ]
+    });
 
     // Clear input field
     userInput.value = '';
@@ -42,9 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer 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',
-          'HTTP-Referer': 'https://justin-ii.github.io/AI/',
-          'X-Title': 'HOPE-AI',
+          'Authorization': 'Bearer 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', // Replace with your actual API key
+          'HTTP-Referer': 'https://justin-ii.github.io/AI/', // Replace with your site URL
+          'X-Title': 'HOPE-AI', // Replace with your site name
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -64,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
               ]
             },
-            ...conversationHistory
+            ...conversationHistory // Include the entire conversation history
           ]
         })
       });
@@ -83,7 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessage('bot', botReply);
 
       // Add bot response to the conversation history
-      conversationHistory.push({ role: "assistant", content: [{ type: "text", text: botReply }] });
+      conversationHistory.push({
+        role: "assistant",
+        content: [{ type: "text", text: botReply }]
+      });
     } catch (error) {
       console.error("Error fetching bot response:", error);
       addMessage('bot', 'Something went wrong!');
